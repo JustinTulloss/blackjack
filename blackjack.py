@@ -1,39 +1,28 @@
 import random
 
-face_map = {
+FACES = {
     1: 'A',
     11: 'J',
     12: 'Q',
     13: 'K'
 }
 
-class Blackjack:
+class BlackjackHand(list):
     """
-    Class to play a round of blackjack.
+    A Blackjack hand.
+
+    This is basically just a list, except that it prints out like a hand of
+    blackjack and adds some blackjack-specific members.
     """
-    def __init__(self):
-        self.deck = range(52)
-        self.shuffle()
-        self.deal()
-        self.status = 'playing'
 
-    def shuffle(self):
-        random.shuffle(self.deck)
-
-    def deal(self):
-        self.player = [None, None]
-        self.dealer = [None, None]
-
-        for i in xrange(4):
-            if i % 2:
-                self.player[i/2] = self.deck.pop()
-            else:
-                self.dealer[(i-1)/2] = self.deck.pop()
-
-    def score(self, hand):
+    def score(self):
+        """
+        Calculates the blackjack score for a given hand. Properly takes
+        Aces and face cards into account.
+        """
         score = 0
         aces = 0
-        for card in hand:
+        for card in self:
             value = (card % 13) + 1
             if value == 1:
                 score += 11
@@ -47,9 +36,70 @@ class Blackjack:
 
         return score
 
+    def __str__(self):
+        card_strings = []
+        for card in self:
+            suit_num = card/13
+            if suit_num < 1:
+                suit = u"\u2660"
+            elif suit_num < 2:
+                suit = u"\u2665"
+            elif suit_num < 3:
+                suit = u"\u2663"
+            else:
+                suit = u"\u2666"
+
+            value = (card % 13) + 1
+            value = FACES[value] if value in FACES else value
+            card_strings.append(suit + unicode(value))
+        return u", ".join(card_strings)
+
+
+class Blackjack(object):
+    """
+    Class to play a round of blackjack.
+    """
+
+    """
+    status - can be one of 'playing', 'house', 'player', or 'push'.
+             It's up to the user to check the status before continuing
+             to play the game. If the status is not "playing", no function
+             can be expected to work correctly.
+    """
+    status = 'playing'
+
+    def __init__(self):
+        """
+        Start a round of blackjack. This shuffles and deals the cards.
+        """
+        self.deck = range(52)
+        self.shuffle()
+        self.deal()
+
+    def shuffle(self):
+        """
+        Shuffles the cards. This is done automatically when the
+        class is created.
+        """
+        random.shuffle(self.deck)
+
+    def deal(self):
+        """
+        Deal the cards. This is done automatically when the class
+        is created.
+        """
+        self.player = BlackjackHand()
+        self.dealer = BlackjackHand()
+
+        for i in xrange(4):
+            if i % 2:
+                self.player.append(self.deck.pop())
+            else:
+                self.dealer.append(self.deck.pop())
+
     def hit(self):
         self.player.append(self.deck.pop())
-        if self.score(self.player) > 21:
+        if self.player.score() > 21:
             self._house_win()
             return
 
@@ -59,8 +109,8 @@ class Blackjack:
         while (self._dealer_round()):
             pass
         if self.status == 'playing':
-            player_score = self.score(self.player)
-            dealer_score = self.score(self.dealer)
+            player_score = self.player.score()
+            dealer_score = self.dealer.score()
             if player_score == dealer_score:
                 self._push()
             elif player_score > dealer_score:
@@ -73,9 +123,9 @@ class Blackjack:
         Deals the dealer another card. Returns True if the dealer might
         want another card in the future.
         """
-        if self.score(self.dealer) < 17:
+        if self.dealer.score() < 17:
             self.dealer.append(self.deck.pop())
-            if self.score(self.dealer) > 21:
+            if self.dealer.score() > 21:
                 self._player_win()
                 return False
             else:
@@ -92,21 +142,6 @@ class Blackjack:
     def _push(self):
         self.status = 'push'
 
-    def getString(self, card):
-        suit_num = card/13
-        if suit_num < 1:
-            suit = u"\u2660"
-        elif suit_num < 2:
-            suit = u"\u2665"
-        elif suit_num < 3:
-            suit = u"\u2663"
-        else:
-            suit = u"\u2666"
-
-        value = (card % 13) + 1
-        value = face_map[value] if value in face_map else value
-        return suit + unicode(value)
-
 if __name__ == "__main__":
     """
     This is testing only, this module is intended
@@ -118,10 +153,8 @@ if __name__ == "__main__":
     if bj.status == 'playing':
         bj.stand()
 
-    print "Player: ", bj.score(bj.player)
-    for card in bj.player:
-        print bj.getString(card)
-    print "Dealer: ", bj.score(bj.dealer)
-    for card in bj.dealer:
-        print bj.getString(card)
+    print "Player: ", bj.player.score()
+    print unicode(bj.player)
+    print "Dealer: ", bj.dealer.score()
+    print unicode(bj.dealer)
     print bj.status
