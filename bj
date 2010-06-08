@@ -3,30 +3,68 @@
 from blackjack import Blackjack
 
 def main():
-    print "Welcome to Blackjack!"
-    bj = Blackjack()
+    print """
+*****************************
+    Welcome to Blackjack!
+*****************************
+"""
 
-    while bj.status == 'playing':
-        print "Dealer's hand: %s" % bj.dealer
-        print "Your hand: %s" % bj.player
-        print "Hit 'h' to hit or 's' to stand"
-        choice = raw_input()
-        if choice.startswith('h'):
-            bj.hit()
+    dollars = 500
+    bet = 5
+    cmd = ''
+
+    while cmd != 'q':
+        print "You have %d dollars" % dollars
+        print "What's your bet? (Hit return to bet %d dollars)" % bet
+        raw_bet = raw_input()
+        if raw_bet:
+            try:
+                bet = int(raw_bet)
+            except ValueError:
+                bet = 0
+
+        if not bet:
+            print "You have to bet something!"
+        elif bet > 100:
+            print "The max bet is 100"
         else:
-            bj.stand()
 
-    if bj.dealer.score() > 21:
-        print "Dealer busts!"
-    elif bj.player.score() > 21:
-        print "Bust!"
-    else:
-        print "Dealer had %d (%s)" % (bj.dealer.score(), bj.dealer)
-        print "You had %d (%s)" % (bj.player.score(), bj.player)
-        if bj.status == "house":
-            print "Dealer wins."
-        elif bj.status == 'player':
-            print "You win!"
+            bj = Blackjack()
+
+            while bj.status == 'playing':
+                print "Dealer's hand: %s" % bj.dealer.hidden()
+                print "Your hand: %s (%d)" % (bj.player, bj.player.score())
+
+                print "Hit 'h' to hit or anything else to stand"
+                choice = raw_input()
+                if choice.startswith('h'):
+                    bj.hit()
+                else:
+                    bj.stand()
+
+            print ""
+
+            if bj.dealer.score() > 21:
+                print "Dealer busts!"
+            elif bj.player.score() > 21:
+                print "Bust!"
+
+            print "Dealer's hand: %s (%d)" % (bj.dealer, bj.dealer.score())
+            print "You had %s (%d)\n" % (bj.player, bj.player.score())
+
+            if bj.status == "house":
+                dollars -= bet
+                print "Dealer wins."
+            elif bj.status == 'player':
+                dollars += bet
+                print "You win!"
+            elif bj.status == 'blackjack':
+                dollars += int(1.5 * bet)
+                print "BLACKJACK!!"
+            else:
+                print "Push"
+
+        print "\n"
 
 if __name__ == '__main__':
     main()

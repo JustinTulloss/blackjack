@@ -36,7 +36,7 @@ class BlackjackHand(list):
 
         return score
 
-    def __str__(self):
+    def _string_list(self):
         card_strings = []
         for card in self:
             suit_num = card/13
@@ -52,7 +52,15 @@ class BlackjackHand(list):
             value = (card % 13) + 1
             value = FACES[value] if value in FACES else value
             card_strings.append(suit + unicode(value))
-        return u", ".join(card_strings)
+        return card_strings
+
+    def hidden(self):
+        strings = self._string_list()
+        strings[0] = "**"
+        return u", ".join(strings)
+
+    def __str__(self):
+        return u", ".join(self._string_list())
 
 
 class Blackjack(object):
@@ -96,6 +104,15 @@ class Blackjack(object):
                 self.player.append(self.deck.pop())
             else:
                 self.dealer.append(self.deck.pop())
+
+        pscore = self.player.score()
+        dscore = self.dealer.score()
+        if pscore == 21 and dscore != 21:
+            self.status = 'blackjack'
+        elif pscore == 21 and dscore == 21:
+            self.status = 'push'
+        elif dscore == 21:
+            self.status = 'house'
 
     def hit(self):
         """
