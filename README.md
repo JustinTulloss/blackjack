@@ -24,6 +24,6 @@ or:
 
     # sudo easy_install nose
 
-The just run nose from the directory containing this README:
+Then just run nose from the directory containing this README:
 
     # nosetests
