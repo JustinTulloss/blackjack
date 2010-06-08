@@ -55,6 +55,10 @@ class BlackjackHand(list):
         return card_strings
 
     def hidden(self):
+        """
+        Returns a string representation that hides the first card. This is
+        useful for showing what the dealer has.
+        """
         strings = self._string_list()
         strings[0] = "**"
         return u", ".join(strings)
@@ -74,12 +78,24 @@ class Blackjack(object):
              to play the game. If the status is not "playing", no function
              can be expected to work correctly. The game is over when the
              status changes from "playing"
+
+             If the status is 'playing', the game should continue
+
+             If the status is 'house', then the house won
+
+             If the status is 'player', then the player won
+
+             If the status is 'push', then the dealer and player tied
+
+             If the status is 'blackjack', then the player hit blackjack
     """
     status = 'playing'
 
     def __init__(self):
         """
         Start a round of blackjack. This shuffles and deals the cards.
+
+        Please read the notes on 'status' to understand how the game progresses
         """
         self.deck = range(52)
         self.shuffle()
