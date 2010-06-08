@@ -1,0 +1,32 @@
+#!/usr/bin/env python
+
+from blackjack import Blackjack
+
+def main():
+    print "Welcome to Blackjack!"
+    bj = Blackjack()
+
+    while bj.status == 'playing':
+        print "Dealer's hand: %s" % bj.dealer
+        print "Your hand: %s" % bj.player
+        print "Hit 'h' to hit or 's' to stand"
+        choice = raw_input()
+        if choice.startswith('h'):
+            bj.hit()
+        else:
+            bj.stand()
+
+    if bj.dealer.score() > 21:
+        print "Dealer busts!"
+    elif bj.player.score() > 21:
+        print "Bust!"
+    else:
+        print "Dealer had %d (%s)" % (bj.dealer.score(), bj.dealer)
+        print "You had %d (%s)" % (bj.player.score(), bj.player)
+        if bj.status == "house":
+            print "Dealer wins."
+        elif bj.status == 'player':
+            print "You win!"
+
+if __name__ == '__main__':
+    main()
