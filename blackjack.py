@@ -8,8 +8,10 @@ face_map = {
 }
 
 class Blackjack:
-
-    def __init__(self, bet):
+    """
+    Class to play a round of blackjack.
+    """
+    def __init__(self):
         self.deck = range(52)
         self.shuffle()
         self.deal()
@@ -110,8 +112,7 @@ if __name__ == "__main__":
     This is testing only, this module is intended
     to be imported.
     """
-    bj = Blackjack(5)
-    bj.player
+    bj = Blackjack()
     bj.dealer
     bj.hit()
     if bj.status == 'playing':
