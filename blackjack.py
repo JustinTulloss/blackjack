@@ -98,6 +98,10 @@ class Blackjack(object):
                 self.dealer.append(self.deck.pop())
 
     def hit(self):
+        """
+        Indicates that the player wants to hit. Will draw a card off the
+        deck and add it to the player's hand.
+        """
         self.player.append(self.deck.pop())
         if self.player.score() > 21:
             self._house_win()
@@ -106,6 +110,12 @@ class Blackjack(object):
         self._dealer_round()
 
     def stand(self):
+        """
+        Indicates that the player wants to stand. This effectively ends the
+        round. The dealer will hit as necessary until its score is > 21 and
+        then the round will end. Be sure to check the status after calling
+        this.
+        """
         while (self._dealer_round()):
             pass
         if self.status == 'playing':
