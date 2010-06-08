@@ -10,9 +10,14 @@ class Blackjack:
         random.shuffle(self.cards)
 
     def deal(self):
-        self.player = (self.cards[0], self.cards[2])
-        self.dealer = (self.cards[1], self.cards[3])
+        self.player = [None, None]
+        self.dealer = [None, None]
 
+        for i in xrange(4):
+            if i % 2:
+                self.player[i/2] = self.cards.pop()
+            else:
+                self.dealer[i/2] = self.cards.pop()
 
 if __name__ == "__main__":
     """
