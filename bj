@@ -11,9 +11,8 @@ def main():
 
     dollars = 500
     bet = 5
-    cmd = ''
 
-    while cmd != 'q':
+    while True:
         print "You have %d dollars" % dollars
         print "What's your bet? (Hit return to bet %d dollars)" % bet
         raw_bet = raw_input()
