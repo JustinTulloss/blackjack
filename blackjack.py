@@ -1,6 +1,14 @@
 import random
 
+face_map = {
+    1: 'A',
+    11: 'J',
+    12: 'Q',
+    13: 'K'
+}
+
 class Blackjack:
+
     def __init__(self, bet):
         self.deck = range(52)
         self.shuffle()
@@ -72,17 +80,19 @@ class Blackjack:
         self.status = 'push'
 
     def getString(self, card):
-        suitNum = card/13
-        if suitNum < 1:
+        suit_num = card/13
+        if suit_num < 1:
             suit = u"\u2660"
-        elif suitNum < 2:
+        elif suit_num < 2:
             suit = u"\u2665"
-        elif suitNum < 3:
+        elif suit_num < 3:
             suit = u"\u2663"
         else:
             suit = u"\u2666"
 
-        return suit + unicode((card % 13) + 1)
+        value = (card % 13) + 1
+        value = face_map[value] if value in face_map else value
+        return suit + unicode(value)
 
 if __name__ == "__main__":
     """
@@ -99,5 +109,7 @@ if __name__ == "__main__":
     print "Player: ", bj.score(bj.player)
     for card in bj.player:
         print bj.getString(card)
-    print "Dealer: ", bj.dealer, bj.score(bj.dealer)
+    print "Dealer: ", bj.score(bj.dealer)
+    for card in bj.dealer:
+        print bj.getString(card)
     print bj.status
