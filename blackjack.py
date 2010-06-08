@@ -30,8 +30,19 @@ class Blackjack:
 
     def score(self, hand):
         score = 0
+        aces = 0
         for card in hand:
-            score += min(10, (card % 13) + 1)
+            value = (card % 13) + 1
+            if value == 1:
+                score += 11
+                aces += 1
+            else:
+                score += min(10, value)
+
+        while score > 21 and aces:
+            score -= 10
+            aces -= 1
+
         return score
 
     def hit(self):
