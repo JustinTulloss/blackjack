@@ -1,10 +1,11 @@
 import random
 
 class Blackjack:
-    def __init__(self):
+    def __init__(self, bet):
         self.deck = range(1, 53)
         self.shuffle()
         self.deal()
+        self.status = 'playing'
 
     def shuffle(self):
         random.shuffle(self.deck)
@@ -19,11 +20,69 @@ class Blackjack:
             else:
                 self.dealer[(i-1)/2] = self.deck.pop()
 
+    def score(self, hand):
+        score = 0
+        for card in hand:
+            score += min(10, card % 13)
+        return score
+
+    def hit(self):
+        self.player.append(self.deck.pop())
+        if self.score(self.player) > 21:
+            self._house_win()
+            return
+
+        self._dealer_round()
+
+    def stand(self):
+        while (self._dealer_round()):
+            pass
+        if self.status == 'playing':
+            player_score = self.score(self.player)
+            dealer_score = self.score(self.dealer)
+            if player_score == dealer_score:
+                self._push()
+            elif player_score > dealer_score:
+                self._player_win()
+            else:
+                self._house_win()
+
+    def _dealer_round(self):
+        """
+        Deals the dealer another card. Returns True if the dealer might
+        want another card in the future.
+        """
+        if self.score(self.dealer) < 17:
+            self.dealer.append(self.deck.pop())
+            if self.score(self.dealer) > 21:
+                self._player_win()
+                return False
+            else:
+                return True
+        else:
+            return False
+
+    def _player_win(self):
+        self.status = 'player'
+
+    def _house_win(self):
+        self.status = 'house'
+
+    def _push(self):
+        self.status = 'push'
+
 if __name__ == "__main__":
     """
     This is testing only, this module is intended
     to be imported.
     """
-    bj = Blackjack()
-    print bj.player
-    print bj.dealer
+    bj = Blackjack(5)
+    bj.player
+    bj.dealer
+    bj.hit()
+    if bj.status == 'playing':
+        bj.stand()
+
+    print "Player: ", bj.player, bj.score(bj.player)
+    print "Dealer: ", bj.dealer, bj.score(bj.dealer)
+    print bj.status
