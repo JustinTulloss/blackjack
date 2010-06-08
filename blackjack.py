@@ -71,6 +71,19 @@ class Blackjack:
     def _push(self):
         self.status = 'push'
 
+    def getString(self, card):
+        suitNum = card/13
+        if suitNum < 1:
+            suit = u"\u2660"
+        elif suitNum < 2:
+            suit = u"\u2665"
+        elif suitNum < 3:
+            suit = u"\u2663"
+        else:
+            suit = u"\u2666"
+
+        return suit + unicode((card % 13) + 1)
+
 if __name__ == "__main__":
     """
     This is testing only, this module is intended
@@ -83,6 +96,8 @@ if __name__ == "__main__":
     if bj.status == 'playing':
         bj.stand()
 
-    print "Player: ", bj.player, bj.score(bj.player)
+    print "Player: ", bj.score(bj.player)
+    for card in bj.player:
+        print bj.getString(card)
     print "Dealer: ", bj.dealer, bj.score(bj.dealer)
     print bj.status
