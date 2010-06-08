@@ -2,7 +2,7 @@ import random
 
 class Blackjack:
     def __init__(self, bet):
-        self.deck = range(1, 53)
+        self.deck = range(52)
         self.shuffle()
         self.deal()
         self.status = 'playing'
@@ -23,7 +23,7 @@ class Blackjack:
     def score(self, hand):
         score = 0
         for card in hand:
-            score += min(10, card % 13)
+            score += min(10, (card % 13) + 1)
         return score
 
     def hit(self):
