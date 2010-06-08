@@ -21,7 +21,8 @@ def main():
             try:
                 bet = int(raw_bet)
             except ValueError:
-                bet = 0
+                print "Bet has to be a number"
+                continue
 
         if not bet:
             print "You have to bet something!"
