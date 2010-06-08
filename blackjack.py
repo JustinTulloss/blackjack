@@ -2,12 +2,12 @@ import random
 
 class Blackjack:
     def __init__(self):
-        self.cards = range(1, 53)
+        self.deck = range(1, 53)
         self.shuffle()
         self.deal()
 
     def shuffle(self):
-        random.shuffle(self.cards)
+        random.shuffle(self.deck)
 
     def deal(self):
         self.player = [None, None]
@@ -15,9 +15,9 @@ class Blackjack:
 
         for i in xrange(4):
             if i % 2:
-                self.player[i/2] = self.cards.pop()
+                self.player[i/2] = self.deck.pop()
             else:
-                self.dealer[i/2] = self.cards.pop()
+                self.dealer[i/2] = self.deck.pop()
 
 if __name__ == "__main__":
     """
