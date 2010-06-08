@@ -17,7 +17,7 @@ class Blackjack:
             if i % 2:
                 self.player[i/2] = self.deck.pop()
             else:
-                self.dealer[i/2] = self.deck.pop()
+                self.dealer[(i-1)/2] = self.deck.pop()
 
 if __name__ == "__main__":
     """
