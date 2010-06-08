@@ -69,10 +69,11 @@ class Blackjack(object):
     """
 
     """
-    status - can be one of 'playing', 'house', 'player', or 'push'.
+    status - can be one of 'playing', 'house', 'player', 'push', or 'blackjack',
              It's up to the user to check the status before continuing
              to play the game. If the status is not "playing", no function
-             can be expected to work correctly.
+             can be expected to work correctly. The game is over when the
+             status changes from "playing"
     """
     status = 'playing'
 
@@ -104,15 +105,7 @@ class Blackjack(object):
                 self.player.append(self.deck.pop())
             else:
                 self.dealer.append(self.deck.pop())
-
-        pscore = self.player.score()
-        dscore = self.dealer.score()
-        if pscore == 21 and dscore != 21:
-            self.status = 'blackjack'
-        elif pscore == 21 and dscore == 21:
-            self.status = 'push'
-        elif dscore == 21:
-            self.status = 'house'
+        self._check_blackjack()
 
     def hit(self):
         """
@@ -168,6 +161,17 @@ class Blackjack(object):
 
     def _push(self):
         self.status = 'push'
+
+    def _check_blackjack(self):
+        pscore = self.player.score()
+        dscore = self.dealer.score()
+        if pscore == 21 and dscore != 21:
+            self.status = 'blackjack'
+        elif pscore == 21 and dscore == 21:
+            self.status = 'push'
+        elif dscore == 21:
+            self.status = 'house'
+
 
 if __name__ == "__main__":
     """
